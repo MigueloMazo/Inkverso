@@ -1,0 +1,185 @@
+#root {
+  display: flex; /* Activa flexbox en el contenedor raíz */
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex; /* Usa Flexbox para organizar elementos hijos (header, main, footer) */
+  flex-direction: column;
+  font-family: 'Roboto', sans-serif;
+  background-image: url('imagenes/fondo.jpg');
+  background-size: cover; /* La imagen cubre todo el fondo */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* El fondo no se mueve al hacer scroll */
+}
+
+main {
+  flex: 1; /* Ocupa todo el espacio disponible entre header y footer */
+}
+
+footer {
+  margin-top: auto; /* Empuja el footer al final cuando hay poco contenido */
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.barra-nav {
+  display: flex; /* Layout flexible */
+  justify-content: space-between; /* Espacio entre secciones izquierda, centro y derecha*/
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 1rem 2rem;
+  position: sticky; /* Se queda fijo en la parte superior al hacer scroll */
+  top: 0;
+  z-index: 1000; /* Encima de otros elementos */
+  flex-wrap: wrap; /* Permite que los elementos bajen de línea en pantallas pequeñas */
+}
+
+.barra-nav__logo {
+  background-color: orange;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.barra-nav__logo:hover {
+  background-color: white; /* Cambia a blanco al pasar el mouse */
+  color: orange; /* Cambia el texto a naranja */
+}
+
+.barra-nav__grupo--centro {
+  display: flex;
+  justify-content: center;
+  flex: 1; /* Ocupa el espacio restante entre logo y carrito */
+  flex-wrap: wrap;
+}
+
+.barra-nav__grupo--centro a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: white;
+  font-size: 1.5rem;
+  transition: color 0.3s ease; /* Suaviza cambio de color */
+}
+
+.barra-nav__grupo--centro a:hover {
+  color: orange; /* naranja al pasar el mouse */
+}
+
+.barra-nav__icono--carrito {
+  font-size: 1.8rem;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.barra-nav__icono--carrito:hover {
+  transform: scale(1.1); /* Aumenta el tamaño ligeramente */
+}
+
+/* Por defecto, el carrito del footer no se muestra */
+.barra-nav__grupo--derecha {
+  display: block;
+}
+
+.pie-pagina__carrito {
+  display: none;
+}
+
+.pie-pagina__contenido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 1rem 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pie-pagina__contenido--izquierda{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pie-pagina__contenido--derecha {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Responsivo: vertical layout en pantallas chicas */
+@media (max-width: 768px) {
+  .barra-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .barra-nav__grupo--izquierda,
+  .barra-nav__grupo--centro,
+  .barra-nav__grupo--derecha {
+    width: 100%;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .barra-nav__grupo--centro {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .barra-nav__grupo--centro a {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0;
+  }
+
+  .barra-nav__grupo--derecha {
+    display: none; /* Oculta carrito del header */
+  }
+
+  .pie-pagina__carrito {
+    display: flex; /* Muestra el carrito en el footer en pantallas pequeñas */
+    justify-content: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .pie-pagina__carrito .barra-nav__icono--carrito {
+    font-size: 1.5rem;
+  }
+
+  .pie-pagina__contenido {
+    flex-direction: row; /* Mantiene disposición horizontal */
+    flex-wrap: nowrap; /* Evita el wrapping */
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  .copyright {
+    font-size: 0.8rem; 
+  }
+
+  .pie-pagina__icono--red-social {
+    font-size: 1.2rem; /* Reduce tamaño de iconos en móvil */
+  }
+
+  .pie-pagina__carrito {
+    display: flex;
+    align-items: center;
+  }
+
+  .pie-pagina__carrito .barra-nav__icono--carrito {
+    font-size: 1.2rem;
+  }
+}
