@@ -37,7 +37,6 @@ footer {
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 1rem 2rem;
-  position: sticky; /* Se queda fijo en la parte superior al hacer scroll */
   top: 0;
   z-index: 1000; /* Encima de otros elementos */
   flex-wrap: wrap; /* Permite que los elementos bajen de línea en pantallas pequeñas */
@@ -124,6 +123,7 @@ footer {
   .barra-nav {
     flex-direction: column;
     align-items: center;
+    padding-bottom: 0;
   }
 
   .barra-nav__grupo--izquierda,
@@ -141,7 +141,6 @@ footer {
 
   .barra-nav__grupo--centro a {
     margin: 0.5rem 0;
-    padding: 0.5rem 0;
   }
 
   .barra-nav__grupo--derecha {
