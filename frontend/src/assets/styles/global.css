@@ -43,7 +43,7 @@ footer {
 }
 
 .barra-nav__logo {
-  background-color: orange;
+  background-color: #FF7F00;
   color: white;
   padding: 0.5rem 1rem;
   font-weight: bold;
@@ -54,7 +54,7 @@ footer {
 
 .barra-nav__logo:hover {
   background-color: white; /* Cambia a blanco al pasar el mouse */
-  color: orange; /* Cambia el texto a naranja */
+  color: #FF7F00; /* Cambia el texto a naranja */
 }
 
 .barra-nav__grupo--centro {
@@ -73,7 +73,7 @@ footer {
 }
 
 .barra-nav__grupo--centro a:hover {
-  color: orange; /* naranja al pasar el mouse */
+  color: #FF7F00; /* naranja al pasar el mouse */
 }
 
 .barra-nav__icono--carrito {

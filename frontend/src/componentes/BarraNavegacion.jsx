@@ -10,7 +10,8 @@ export default function BarraNavegacion() {
       <div className="barra-nav__grupo--centro">
         <Link to="/catalogo">Catálogo de Libros</Link>
         <Link to="/login">Iniciar Sesión</Link>
-        <Link to="/register">Regístrate</Link>
+        <Link to="/registro">Regístrate</Link>
+        <Link to="/administracion">Administracion</Link>
       </div>
       <div className="barra-nav__grupo--derecha">
         <Link to="/carrito" className="barra-nav__icono--carrito">🛒</Link>

@@ -3,6 +3,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Landing from '../componentes/Landing'
 import Login from '../componentes/Login'
 import ForgotPassword from '../componentes/ForgotPassword' 
+import Registro from '../componentes/Registro'
+import Catalogo from '../componentes/Catalogo'
+import DetalleLibro from '../componentes/Detalle'
+
 export default function Router() {
   return (
     <BrowserRouter>
@@ -10,7 +14,9 @@ export default function Router() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* <Route path="/catalogo" element={<Catalogo />} /> */}
+        <Route path="/registro" element={<Registro />} />
+        <Route path="/catalogo" element={<Catalogo />} />
+        <Route path="/detalle/:id" element={<DetalleLibro />} />
       </Routes>
     </BrowserRouter>
   )

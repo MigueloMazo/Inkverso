@@ -1,0 +1,234 @@
+.catalogo-filtros {
+background: rgba(0, 0, 0, 0.8);
+padding: 1.5rem 1rem 1rem;
+border-radius: 8px;
+margin-top: 0.5rem;
+}
+
+/* Primera fila */
+.catalogo-filtros__primario {
+display: flex;
+align-items: center;
+gap: 1rem;
+flex-wrap: wrap; /* Para que en pantallas pequeñas se acomode */
+}
+
+/*Categorías*/
+.catalogo-filtros__titulo {
+font-size: 2.0rem;
+font-weight: bold;
+color: white;
+white-space: nowrap; /* Evita salto de línea */
+}
+
+/* Botones */
+.catalogo-filtros__categorias {
+display: flex;
+flex: 1;
+justify-content: space-around;
+gap: 0.5rem;
+}
+.categoria-btn {
+padding: 0.8rem 1.5rem;
+font-size: 1.1rem;
+background: rgba(255, 255, 255, 0.3);
+color: #FF7F00;
+border: 2px solid #FF7F00;
+border-radius: 4px;
+cursor: pointer;
+transition: all 0.2s;
+}
+.categoria-btn:hover {
+background: #FF7F00;
+color: white;
+}
+.clear-btn{
+background: #6a0dad;
+color: #fff;
+}
+/* Búsqueda */
+.catalogo-filtros__busqueda {
+flex: 1;
+display: flex;
+justify-content: flex-end;
+}
+.catalogo-filtros__busqueda input {
+padding: 0.8rem;
+width: 100%;
+max-width: 300px;
+font-size: 1.2rem;
+border-radius: 4px;
+border: 1px solid #FF7F00;
+background: rgba(255, 255, 255, 0.1);
+color: #fff;
+}
+
+/* Contenedor de filtros móviles (oculto en desktop) */
+.catalogo-filtros__mobile-filtros {
+display: none;
+}
+
+/* --- Segunda fila (desktop) --- */
+.catalogo-filtros__secundario {
+display: flex;
+justify-content: flex-end;
+gap: 1rem;
+margin-top: 1rem;
+}
+.filtro-campo label {
+font-size: 1.3rem;
+color: #fff;
+padding-right: 0.3rem;
+}
+.filtro-campo input,
+.filtro-campo select {
+padding: 0.8rem;
+font-size: 1.2rem;
+border-radius: 4px;
+border: 1px solid #FF7F00;
+background: rgba(255, 255, 255, 0.3);
+color: #FF7F00;
+}
+
+/* --- Listado de libros Catalogo --- */
+.catalogo-lista {
+display: grid;
+grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+gap: 1.5rem;
+margin-top: 1.5rem;
+margin-bottom: 1.5rem;
+padding: 0 1rem;
+}
+
+/* Tarjeta de cada libro */
+.book-card {
+display: flex;
+background-color: rgba(0, 0, 0, 0.8);
+border-radius: 8px;
+overflow: hidden;
+padding: 1rem;
+}
+
+/* Imagen 25% */
+.book-card__image {
+flex: 0 0 25%;
+}
+.book-card__image img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+
+/* Info y botones 75% */
+.book-card__info {
+flex: 1;
+padding: 1rem;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+color: #fff;
+}
+
+/* Título y descripción */
+.book-card__title {
+margin: 0 0 0.5rem;
+font-size: 1.5rem;
+}
+.book-card__desc {
+flex: 1;
+font-size: 1.1rem;
+line-height: 1.3;
+}
+
+/* Acciones: detalles + carrito */
+.book-card__actions {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+/* Botón Detalles (morado) */
+.btn-detalles {
+background-color: #6a0dad;
+color: #fff;
+text-decoration: none;
+padding: 0.5rem 1rem;
+margin-right: 0.5rem;
+border-radius: 4px;
+font-size: 1.2rem;
+transition: background-color 0.2s;
+}
+.btn-detalles:hover {
+background-color: #5a0c9b;
+box-shadow: 0 0 10px #FF7F00;
+}
+
+/* Botón Carrito + Precio (naranja) */
+.btn-carrito {
+background-color: #FF7F00;
+color: #fff;
+border: none;
+padding: 0.5rem 1rem;
+border-radius: 4px;
+font-size: 1.2rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+.btn-carrito:hover {
+background-color: #e66f00;
+box-shadow: 0 0 10px #FF7F00;
+}
+
+/* --- Responsive móvil (768px) --- */
+@media (max-width: 768px) {
+    /* Ocultar fila secundaria */
+    .catalogo-filtros__secundario {
+        display: none;
+    }
+
+    .catalogo-filtros__mobile-filtros {
+        display: flex;
+        flex: 1;
+        gap: 0.75rem;
+    }
+
+    /* Ajustar orden: título, categorías, filtros móviles, búsqueda */
+    .catalogo-filtros__primario {
+        justify-content: space-between;
+    }
+
+    /* Orden de Filtros */
+    .catalogo-filtros__busqueda {
+        order: 4;
+        width: 35%;
+    }
+
+    .catalogo-filtros__titulo {
+        order: 1;
+    }
+    .catalogo-filtros__categorias {
+        order: 2;
+    }
+    .catalogo-filtros__mobile-filtros {
+        order: 3;
+    }
+
+    /* Seccion Libros*/
+    .catalogo-lista {
+    grid-template-columns: 1fr; /* Solo 1 columna */
+    }
+    .book-card {
+    flex-direction: column;
+    }
+    .book-card__image {
+    flex: none;
+    width: 100%;
+    height: 200px; /* altura fija para móvil */
+    }
+    .book-card__info {
+    padding: 0.75rem;
+    }
+}
