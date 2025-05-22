@@ -1,0 +1,181 @@
+/* src/assets/styles/detalle.css */
+
+/* Contenedor principal: imagen a la izquierda, info a la derecha */
+.detalle-container {
+  display: flex;
+  gap: 2rem;
+  padding: 4rem 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  align-items: center; 
+}
+
+/* Sección de imagen */
+.detalle-image {
+  flex: 0 0 40%;
+  height: 100%; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.detalle-image img {
+  height: 70%;              /* ocupa toda la altura posible */
+  width: auto;               /* mantiene proporción */
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Sección de información */
+.detalle-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;     
+  padding-right: 1rem;
+  justify-content: center; /* Espacio entre el título y el botón */
+}
+
+.detalle-title {
+  font-size: 3rem;
+  margin: 0;
+}
+.detalle-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.detalle-list li {
+  margin-bottom: 0.75rem;
+  font-size: 1.6rem;
+}
+
+/* Botón de agregar al carrito */
+.btn-carrito {
+  background-color: #ffa500;
+  color: #000;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  align-self: flex-start;
+}
+.btn-carrito:hover {
+  background-color: #e69500;
+}
+
+/* Sección de comentarios */
+.detalle-comments {
+  margin-top: 2rem;
+  max-width: 95%;
+}
+.detalle-comments h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.comment-item {
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.comment-user {
+  font-weight: bold;
+}
+.comment-text {
+  flex: 1;
+}
+.comment-rating {
+  color: #ffa500;
+  font-weight: bold;
+}
+
+/* Formulario de nuevo comentario */
+.comment-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: center;
+}
+.comment-form textarea {
+  grid-column: 1 / 3; /* Ocupa toda la fila superior */
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #fff;
+  resize: vertical;
+}
+.comment-form select {
+  width: 150px;
+  padding: 0.5rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #fff;
+}
+.btn-submit-comment {
+  align-self: flex-end;
+  background-color: #646cff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-submit-comment:hover {
+  background-color: #535bf2;
+}
+
+@media (max-width: 768px) {
+  .detalle-container {
+    flex-direction: column;
+    align-items: flex-start;      /* alinea al inicio para evitar superposición */
+    padding: 1rem 1rem 4rem;      /* top/right-left/bottom */
+    height: auto;                 /* deja fluir el contenido */
+  }
+  .detalle-image {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    height: auto;
+  }
+  .detalle-image img {
+    width: 100%;
+    height: 80%;
+    max-height: none;
+    object-fit: contain;
+  }
+  .detalle-info {
+    width: 100%;
+    padding-bottom: 2rem;         /* espacio para el footer */
+    height: auto;                 /* ajusta según contenido */
+  }
+  .comment-form {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .comment-form textarea {
+    grid-column: 1;
+  }
+  .comment-form label,
+  .btn-submit-comment {
+    grid-column: 1;
+    width: 100%;
+  }
+}
