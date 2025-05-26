@@ -13,15 +13,14 @@ const initialCart = [
 
 export default function Carrito() {
   const [cartItems, setCartItems] = useState(initialCart)
-  const [paymentMethod, setPaymentMethod] = useState('credit') // 'credit' o 'debit'
-  const [address, setAddress] = useState('')
-  const [isSaved, setIsSaved] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('credit') // 'credito' o 'debito'
+  const [address, setAddress] = useState('') // Dirección de envío ingresada por el usuario
+  const [isSaved, setIsSaved] = useState(false) // Indica si la dirección ya fue guardada (true) o está lista para editar
 
-  // Totales
-  const subtotal = useMemo(() => cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0), [cartItems])
+  const subtotal = useMemo(() => cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0), [cartItems])// Cálculo de subtotales y totales usando useMemo para optimizar
   const shipping = 15000
   const total = subtotal + shipping
-  const itemCount = useMemo(() => cartItems.reduce((sum, i) => sum + i.quantity, 0), [cartItems])
+  const itemCount = useMemo(() => cartItems.reduce((sum, i) => sum + i.quantity, 0), [cartItems])// Cuenta total de artículos en el carrito
 
   // Fecha estimada: hoy + 5 días
   const estimatedDate = useMemo(() => {
@@ -49,7 +48,7 @@ export default function Carrito() {
   // Guardar / editar dirección
   const handleSaveAddress = () => {
     if (!address.trim()) return alert('Ingresa una dirección válida.')
-    setIsSaved(prev => !prev)
+    setIsSaved(prev => !prev) // Alterna entre guardado y editable
   }
 
   return (

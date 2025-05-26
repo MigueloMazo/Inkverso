@@ -7,6 +7,7 @@ import Registro from '../componentes/Registro'
 import Catalogo from '../componentes/Catalogo'
 import DetalleLibro from '../componentes/Detalle'
 import Carrito from '../componentes/Carrito'
+import Admin from '../componentes/Administracion'
 
 export default function Router() {
   return (
@@ -19,6 +20,7 @@ export default function Router() {
         <Route path="/catalogo" element={<Catalogo />} />
         <Route path="/detalle/:id" element={<DetalleLibro />} />  
         <Route path="/carrito" element={<Carrito />} />
+        <Route path="/admin" element={<Admin />} />
         {/* Puedes agregar más rutas aquí */}
       </Routes>
     </BrowserRouter>
