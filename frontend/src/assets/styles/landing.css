@@ -1,62 +1,361 @@
-.landing .intro-text {
-  margin-top: 2rem;
-  text-align: center;
+/* Layout principal */
+.landing-wrapper {
+  min-height: calc(100vh - 200px); /* Aumenta este valor para dejar más espacio al footer */
+  margin-top: 80px; /* Ajusta este valor según la altura real de tu nav */
+  margin-bottom: 15px; /* Espacio para el footer */
+  padding: 20px 0; /* Padding arriba y abajo */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.8) 100%);
 }
 
 .landing-container {
-  display: flex;               /* Flexbox horizontal */
-  flex: 1;                     /* Ocupa todo el espacio entre la barra de navegacion y footer */
-  margin: 20px 0;              
-  gap: 20px;                   
-  overflow: hidden; 
-  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  gap: 40px;
+  align-items: center;
+  z-index: 2;
+  position: relative;
 }
 
 .landing-left,
 .landing-right {
-  flex: 1;                     
-  display: flex;               
-  justify-content: center;     
-  align-items: center;  
-  padding-left: 50px;       
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.landing-left img {
-  width: 100%;              
-  height: 90%;             
-  object-fit: contain;      /* muestra la imagen completa sin recortes */
+/* Imagen principal con efectos */
+.image-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
 }
 
-.landing-right .intro-text {
-  font-size: 2rem;           
-  color: white;                
-  text-align: center;          /* Centrado multilínea */
-  padding-right: 50px;             
+.image-carousel {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  border-radius: 15px;
+  padding: 0; /* Padding interno */
+  box-sizing: border-box; /* Para que el padding no aumente el tamaño total */
 }
 
+.main-image {
+  position: absolute;
+  top: 20px;              /* espacio superior */
+  bottom: 20px;           /* espacio inferior */
+  left: 0;
+  right: 0;
+  /* limitamos a lo que cabe dentro de esos top/bottom/left/right */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;    /* mantiene la proporción y no recorta */
+  margin: auto;           /* centra automáticamente */
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
+}
+
+.main-image.active {
+  opacity: 1;
+}
+
+.main-image:hover {
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4); /* Solo cambia la sombra al hover */
+}
+
+/* Indicadores de imagen */
+.image-indicators {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.indicator:hover {
+  border-color: rgba(255,255,255,0.8);
+  transform: scale(1.2);
+}
+
+.image-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulseGlow 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* Contenido de texto mejorado */
+.text-container {
+  padding: 0 20px;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  animation: slideInRight 1s ease-out;
+}
+
+.highlight {
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.accent {
+  background: linear-gradient(45deg, #ff6b6b, #feca57, #48cae4);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease infinite;
+}
+
+.intro-text {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  text-align: left;
+  animation: slideInRight 1s ease-out 0.3s both;
+}
+
+/* Botón CTA dinámico */
+.cta-container {
+  animation: slideInRight 1s ease-out 0.6s both;
+}
+
+.cta-button {
+  position: relative;
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  text-decoration: none; /* Para que el Link no tenga subrayado */
+  display: inline-block; /* Para que se comporte como botón */
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+}
+
+.button-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.cta-button:hover .button-glow {
+  left: 100%;
+}
+
+/* Elementos flotantes decorativos */
+.floating-elements {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating-book {
+  position: absolute;
+  width: 30px;
+  height: 40px;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border-radius: 3px;
+  opacity: 0.3;
+  animation: floatAround 20s linear infinite;
+}
+
+.floating-book::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 2px;
+  height: 36px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 1px;
+}
+
+.floating-book-1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 25s;
+}
+
+.floating-book-2 {
+  top: 60%;
+  right: 15%;
+  animation-delay: -8s;
+  animation-duration: 30s;
+}
+
+.floating-book-3 {
+  top: 80%;
+  left: 80%;
+  animation-delay: -15s;
+  animation-duration: 22s;
+}
+
+/* Animaciones */
+@keyframes floatImage {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes floatAround {
+  0% { transform: translateX(0) translateY(0) rotate(0deg); }
+  25% { transform: translateX(100px) translateY(-50px) rotate(90deg); }
+  50% { transform: translateX(50px) translateY(-100px) rotate(180deg); }
+  75% { transform: translateX(-50px) translateY(-50px) rotate(270deg); }
+  100% { transform: translateX(0) translateY(0) rotate(360deg); }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
 
   body.landing {
-    overflow-y: auto;  /* reactiva scroll vertical */
+    overflow-y: auto; /* Permite scroll vertical */
+    height: auto; /* Altura automática */
   }
 
+  .landing-wrapper {
+    min-height: auto; /* Cambia de calc(100vh - 160px) a auto */
+    margin-top: 70px;
+    margin-bottom: 40px;
+    padding: 20px 0; /* Asegúrate de tener padding */
+  }
   .landing-container {
-    flex-direction: column; 
-    padding: 10px 0;        
-    overflow: visible;      
-    -webkit-overflow-scrolling: touch;
+    flex-direction: column;
+    padding: 20px;
+    gap: 30px;
   }
 
   .landing-left,
   .landing-right {
-    flex: none;    
-    width: 100%;   
-    padding-left: 0;
+    width: 100%;
   }
 
-  .landing-left img {
-    width: 100%;       
-    height: auto;      /* mantiene proporción */
-    padding: 50px;
+  .image-container {
+    max-width: 300px;
+    margin-bottom: 30px; /* Margen superior para separar de la parte superior */
+  }
+
+  .image-carousel {
+    height: 400px; /* Altura menor en móvil */
+  }
+
+  .main-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .text-container {
+    padding: 0 10px;
+  }
+
+  .floating-book {
+    display: none; /* Oculta elementos flotantes en móvil */
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-container {
+    padding: 15px;
+  }
+
+  .image-carousel {
+    height: 350px; /* Altura aún menor en pantallas muy pequeñas */
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+  }
+
+  .intro-text {
+    font-size: 1rem;
+  }
+
+  .cta-button {
+    padding: 12px 25px;
+    font-size: 1rem;
   }
 }
