@@ -1,76 +1,157 @@
 .login-container {
-display: flex;                        
-justify-content: center;              
-align-items: center;                  
-height: calc(100vh - 112px);          /* Altura menos barra de navegacion+footer*/
-padding: 1rem;
+  display: flex;                        
+  justify-content: center;              
+  align-items: center;                  
+  padding: 1rem;
+  padding-top: 100px; /* Espacio para el nav */
+  padding-bottom: 20px; /* Espacio para el footer */
+  box-sizing: border-box;
+  overflow-y: auto; /* Scroll si el contenido es muy alto */
 }
 
 /* Estilos del formulario */
 .login-form {
-background-color: rgba(0, 0, 0, 0.8); 
-padding: 2rem;                        
-border-radius: 8px;                   
-width: 100%;
-max-width: 400px;                     
-color: #fff;                          
-display: flex;
-flex-direction: column;               
-gap: 1.2rem;                          
+  background-color: rgba(0, 0, 0, 0.8); 
+  padding: 2rem;                        
+  border-radius: 8px;                   
+  width: 100%;
+  max-width: 400px;                     
+  color: #fff;                          
+  display: flex;
+  flex-direction: column;               
+  gap: 0.8rem;
+  /* Añadido para mejor responsividad */
+  box-sizing: border-box;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Título centrado */
 .login-form h2 {
-margin: 0 0 1rem;
-text-align: center;
+  margin: 0 0 1rem;
+  text-align: center;
+  font-size: 1.8rem;
 }
 
 /* Etiqueta de cada campo */
 .login-form label {
-font-size: 1.2rem;
-margin-bottom: 0.3rem;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
 }
 
 /* Inputs de correo y contraseña */
 .login-form input {
-padding: 0.8rem;
-border: 1px solid #444;
-border-radius: 4px;
-background-color: #1a1a1a;
-color: #fff;
-font-size: 1.2rem;
+  padding: 0.8rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: orange;
+  box-shadow: 0 0 0 2px rgba(255, 165, 0, 0.2);
+}
+
+.login-form input::placeholder {
+  color: #888;
 }
 
 /* Botón principal */
 .login-form button {
-padding: 0.8rem;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-background-color: orange;            
-color: #fff;
-font-weight: bold;
-font-size: 1.2rem;
-transition: background-color 0.2s;
-}
-.login-form button:hover {
-background-color: #FF7F00;            
+  padding: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: orange;            
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Enlaces de ayuda*/
+.login-form button:hover {
+  background-color: #FF7F00;
+  transform: translateY(-1px);
+}
+
+.login-form button:active {
+  transform: translateY(0);
+}
+
+/* Enlaces de ayuda */
 .login-links {
-display: flex;                        
-justify-content: space-between; 
-font-size: 0.9rem;
+  display: flex;                        
+  justify-content: space-between; 
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .login-links a {
-color: #aaa;
-text-decoration: none;
-transition: color 0.2s;
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
 }
+
 .login-links a:hover {
-color: #fff;                          /* Aclara al pasar el mouse */
-text-decoration: underline;
+  color: #fff;
+  text-decoration: underline;
 }
+
+/* Media Queries para Responsividad */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1.5rem 1rem;
+    margin-top: 70px;                   /* Menos espacio en tablets */
+  }
   
+  .login-form {
+    padding: 1.5rem;
+    max-width: 90%;                     /* Más ancho en tablets */
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
+    margin-top: 60px;                   /* Menos espacio en móviles */
+  }
+  
+  .login-form {
+    padding: 1.5rem;
+    max-width: 95%;                     /* Casi todo el ancho en móviles */
+    width: 95%;
+  }
+  
+  .login-links {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 320px) {
+  .login-container {
+    margin-top: 50px;                   /* Aún menos espacio */
+    padding: 0.5rem;
+  }
+  
+  .login-form {
+    padding: 1rem;
+    max-width: 100%;
+    width: 100%;
+  }
+}
