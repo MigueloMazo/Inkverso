@@ -1,3 +1,4 @@
+/* Contenedor principal del formulario de registro */
 .register-container {
   display: flex;
   justify-content: center;
@@ -6,9 +7,10 @@
   padding-top: 80px; /* Espacio para el nav */
   padding-bottom: 20px; /* Espacio para el footer */
   box-sizing: border-box;
-  overflow-y: auto; /* Scroll si el contenido es muy alto */
+  overflow-y: auto;
 }
 
+/* Estilo base del formulario */
 .register-form {
   background-color: rgba(0, 0, 0, 0.8);
   padding: 2rem;
@@ -45,6 +47,7 @@
   margin-bottom: 0.3rem;
 }
 
+/* Inputs (nombre, correo, etc.) */
 .register-form input {
   padding: 0.8rem;
   border: 1px solid #444;
@@ -55,12 +58,14 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Estilo cuando se enfoca un input */
 .register-form input:focus {
   outline: none;
   border-color: orange;
   box-shadow: 0 0 0 2px rgba(255, 165, 0, 0.2);
 }
 
+/* Input con error */
 .register-form input.error {
   border-color: #ff4444;
 }
@@ -76,9 +81,11 @@
 }
 
 .password-input-container input {
-  padding-right: 3rem;
+  padding-right: 3rem; /* Deja espacio para el botón de mostrar */
 }
 
+
+/* Botón de mostrar/ocultar contraseña */
 .password-toggle {
   position: absolute;
   right: 0.5rem;
@@ -112,8 +119,7 @@
   text-align: center;
   margin-bottom: 0.5rem;
 }
-
-/* Requisitos de contraseña */
+/* Requisitos de contraseña (texto informativo) */
 .password-requirements {
   margin-top: 0.3rem;
 }
@@ -143,6 +149,7 @@
   transform: translateY(-1px);
 }
 
+/* Estilo cuando está deshabilitado */
 .register-form button[type="submit"]:disabled {
   background-color: #666;
   cursor: not-allowed;
@@ -151,7 +158,7 @@
 
 .register-form button.loading {
   position: relative;
-  color: transparent;
+  color: transparent; /* Oculta el texto mientras carga */
 }
 
 .register-form button.loading::after {
@@ -169,6 +176,7 @@
   animation: spin 1s linear infinite;
 }
 
+/* Animación de giro del loader */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -240,7 +248,7 @@
   }
 }
 
-/* Estados adicionales para mejor UX */
+/* Estilo verde para inputs válidos */
 .register-form input:valid {
   border-color: #4CAF50;
 }

@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import BarraNavegacion from '../componentes/BarraNavegacion'
 import Footer from '../componentes/Footer'
 import '../assets/styles/register.css'
+import axios from 'axios'; // Cliente HTTP para hacer peticiones al backend
 
+// Componente de registro
 export default function Regist() {
-  const navigate = useNavigate()
+  const navigate = useNavigate() // Hook para redirigir después del registro
+  // Estado del formulario
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -13,19 +16,21 @@ export default function Regist() {
     password: '',
     confirmPassword: ''
   })
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({}) // Errores individuales o generales
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  // Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target
+    // Actualiza el estado con el nuevo valor
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
     
-    // Limpiar error específico cuando el usuario empiece a escribir
+    // Limpia el error del campo al empezar a escribir
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -33,7 +38,7 @@ export default function Regist() {
       }))
     }
   }
-
+  // Validación de los campos del formulario
   const validateForm = () => {
     const newErrors = {}
 
@@ -78,30 +83,39 @@ export default function Regist() {
     return newErrors
   }
 
+  // Envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    const formErrors = validateForm()
+    const formErrors = validateForm() // Validar antes de enviar
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors)
-      return
+      return // Si hay errores, no continúa
     }
 
-    setIsLoading(true)
+    setIsLoading(true) // Activa spinner o desactiva botón
     
     try {
-      // TODO: Llamar a la API para crear el usuario
+      // Armar objeto para enviar
       const userData = {
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
+        first_name: formData.firstName.trim(),
+        last_name: formData.lastName.trim(),
         email: formData.email.toLowerCase().trim(),
         password: formData.password
       }
       
       console.log('Datos a enviar:', userData)
       
-      // Simular llamada a API
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Enviar datos al backend, por ahora Local
+      const response = await axios.post('http://localhost:4000/api/auth/register', userData);
+
+      const { user, token } = response.data;
+
+      // Guarda el token en localStorage (para mantener la sesión)
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      console.log('✅ Usuario registrado exitosamente:', user);
       
       // Tras registro exitoso, redirigir
       navigate('/catalogo', { 
@@ -112,9 +126,19 @@ export default function Regist() {
     } catch (error) {
       console.error('Error en registro:', error)
       setErrors({ general: 'Error al crear la cuenta. Por favor intenta de nuevo.' })
-    } finally {
-      setIsLoading(false)
-    }
+
+      // Manejo de errores de red o de validación del backend
+      if (error.response) {
+          const errorMessage = error.response.data?.error || 'Error al crear la cuenta'
+          setErrors({ general: errorMessage })
+        } else if (error.request) {
+          setErrors({ general: 'No se pudo conectar al servidor. Verifica tu conexión.' })
+        } else {
+          setErrors({ general: 'Error inesperado. Por favor intenta de nuevo.' })
+        }
+      } finally {
+        setIsLoading(false) // Siempre apagar el loading
+      }
   }
 
   return (
@@ -130,6 +154,7 @@ export default function Regist() {
         <form className="register-form" onSubmit={handleSubmit}>
           <h2>Crear Cuenta</h2>
 
+          {/* Error general si el registro falla */}
           {errors.general && (
             <div className="error-message general-error">
               {errors.general}
@@ -204,6 +229,7 @@ export default function Regist() {
                 required
                 className={errors.password ? 'error' : ''}
               />
+              {/* Botón para mostrar/ocultar */}
               <button
                 type="button"
                 className="password-toggle"

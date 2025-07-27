@@ -7,10 +7,10 @@ import '../assets/styles/landing.css'
 export default function Landing() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   
-  // Array de imágenes - agrega aquí las rutas de tus imágenes
+  // Array de imágenes solo de muestra
   const images = [
     "./imagenes/BestSeller1.jpg",
-    "./imagenes/BestSeller1.jpg", // Agrega más imágenes aquí
+    "./imagenes/BestSeller1.jpg",
     "./imagenes/BestSeller1.jpg",
     "./imagenes/BestSeller1.jpg"
   ]

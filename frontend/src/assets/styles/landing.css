@@ -1,9 +1,9 @@
-/* Layout principal */
+/*LAYOUT PRINCIPAL*/
 .landing-wrapper {
-  min-height: calc(100vh - 200px); /* Aumenta este valor para dejar más espacio al footer */
-  margin-top: 80px; /* Ajusta este valor según la altura real de tu nav */
-  margin-bottom: 15px; /* Espacio para el footer */
-  padding: 20px 0; /* Padding arriba y abajo */
+  min-height: calc(100vh - 200px);
+  margin-top: 80px;
+  margin-bottom: 15px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,7 +31,7 @@
   align-items: center;
 }
 
-/* Imagen principal con efectos */
+/*IMAGEN PRINCIPAL*/
 .image-container {
   position: relative;
   width: 100%;
@@ -44,21 +44,19 @@
   height: 500px;
   overflow: hidden;
   border-radius: 15px;
-  padding: 0; /* Padding interno */
-  box-sizing: border-box; /* Para que el padding no aumente el tamaño total */
+  box-sizing: border-box;
 }
 
 .main-image {
   position: absolute;
-  top: 20px;              /* espacio superior */
-  bottom: 20px;           /* espacio inferior */
+  top: 20px;
+  bottom: 20px;
   left: 0;
   right: 0;
-  /* limitamos a lo que cabe dentro de esos top/bottom/left/right */
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;    /* mantiene la proporción y no recorta */
-  margin: auto;           /* centra automáticamente */
+  object-fit: contain;
+  margin: auto;
   border-radius: 15px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
   transition: opacity 1s ease-in-out;
@@ -70,10 +68,10 @@
 }
 
 .main-image:hover {
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4); /* Solo cambia la sombra al hover */
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
 }
 
-/* Indicadores de imagen */
+/*INDICADORES DE IMAGEN*/
 .image-indicators {
   position: absolute;
   bottom: -40px;
@@ -104,20 +102,7 @@
   transform: scale(1.2);
 }
 
-.image-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120%;
-  height: 120%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: pulseGlow 4s ease-in-out infinite;
-  z-index: -1;
-}
-
-/* Contenido de texto mejorado */
+/*CONTENIDO DE TEXTO*/
 .text-container {
   padding: 0 20px;
 }
@@ -153,7 +138,7 @@
   animation: slideInRight 1s ease-out 0.3s both;
 }
 
-/* Botón CTA dinámico */
+/*BOTÓN CTA*/
 .cta-container {
   animation: slideInRight 1s ease-out 0.6s both;
 }
@@ -171,8 +156,8 @@
   overflow: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  text-decoration: none; /* Para que el Link no tenga subrayado */
-  display: inline-block; /* Para que se comporte como botón */
+  text-decoration: none;
+  display: inline-block;
 }
 
 .cta-button:hover {
@@ -198,7 +183,7 @@
   left: 100%;
 }
 
-/* Elementos flotantes decorativos */
+/*ELEMENTOS FLOTANTES*/
 .floating-elements {
   position: absolute;
   width: 100%;
@@ -249,17 +234,7 @@
   animation-duration: 22s;
 }
 
-/* Animaciones */
-@keyframes floatImage {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(1deg); }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
-}
-
+/*ANIMACIONES*/
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -272,32 +247,46 @@
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%, 100% { 
+    background-position: 0% 50%; 
+  }
+  50% { 
+    background-position: 100% 50%; 
+  }
 }
 
 @keyframes floatAround {
-  0% { transform: translateX(0) translateY(0) rotate(0deg); }
-  25% { transform: translateX(100px) translateY(-50px) rotate(90deg); }
-  50% { transform: translateX(50px) translateY(-100px) rotate(180deg); }
-  75% { transform: translateX(-50px) translateY(-50px) rotate(270deg); }
-  100% { transform: translateX(0) translateY(0) rotate(360deg); }
+  0% { 
+    transform: translateX(0) translateY(0) rotate(0deg); 
+  }
+  25% { 
+    transform: translateX(100px) translateY(-50px) rotate(90deg); 
+  }
+  50% { 
+    transform: translateX(50px) translateY(-100px) rotate(180deg); 
+  }
+  75% { 
+    transform: translateX(-50px) translateY(-50px) rotate(270deg); 
+  }
+  100% { 
+    transform: translateX(0) translateY(0) rotate(360deg); 
+  }
 }
 
-/* Responsive Design */
+/* Responsividad*/
 @media (max-width: 768px) {
-
   body.landing {
-    overflow-y: auto; /* Permite scroll vertical */
-    height: auto; /* Altura automática */
+    overflow-y: auto;
+    height: auto;
   }
 
   .landing-wrapper {
-    min-height: auto; /* Cambia de calc(100vh - 160px) a auto */
+    min-height: auto;
     margin-top: 70px;
     margin-bottom: 40px;
-    padding: 20px 0; /* Asegúrate de tener padding */
+    padding: 20px 0;
   }
+
   .landing-container {
     flex-direction: column;
     padding: 20px;
@@ -311,11 +300,11 @@
 
   .image-container {
     max-width: 300px;
-    margin-bottom: 30px; /* Margen superior para separar de la parte superior */
+    margin-bottom: 30px;
   }
 
   .image-carousel {
-    height: 400px; /* Altura menor en móvil */
+    height: 400px;
   }
 
   .main-title {
@@ -333,7 +322,7 @@
   }
 
   .floating-book {
-    display: none; /* Oculta elementos flotantes en móvil */
+    display: none;
   }
 }
 
@@ -343,7 +332,7 @@
   }
 
   .image-carousel {
-    height: 350px; /* Altura aún menor en pantallas muy pequeñas */
+    height: 350px;
   }
 
   .main-title {

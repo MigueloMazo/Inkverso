@@ -6,7 +6,7 @@
   padding-top: 100px; /* Espacio para el nav */
   padding-bottom: 20px; /* Espacio para el footer */
   box-sizing: border-box;
-  overflow-y: auto; /* Scroll si el contenido es muy alto */
+  overflow-y: auto;
 }
 
 /* Estilos del formulario */
@@ -20,12 +20,11 @@
   display: flex;
   flex-direction: column;               
   gap: 0.8rem;
-  /* Añadido para mejor responsividad */
   box-sizing: border-box;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Título centrado */
+/* Título del formulario */
 .login-form h2 {
   margin: 0 0 1rem;
   text-align: center;
@@ -49,7 +48,7 @@
   font-size: 1.2rem;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease; /* Animación al enfocar */
 }
 
 .login-form input:focus {
@@ -77,11 +76,13 @@
   box-sizing: border-box;
 }
 
+/* Hover del botón (más oscuro + efecto levitación) */
 .login-form button:hover {
   background-color: #FF7F00;
   transform: translateY(-1px);
 }
 
+/* Al hacer clic, el botón baja */
 .login-form button:active {
   transform: translateY(0);
 }
@@ -99,7 +100,7 @@
   color: #aaa;
   text-decoration: none;
   transition: color 0.2s ease;
-  white-space: nowrap;
+  white-space: nowrap; /* Evita que se corten palabras */
 }
 
 .login-links a:hover {
@@ -107,18 +108,17 @@
   text-decoration: underline;
 }
 
-/* Media Queries para Responsividad */
+/*Responsividad */
 
 /* Tablets */
 @media (max-width: 768px) {
   .login-container {
     padding: 1.5rem 1rem;
-    margin-top: 70px;                   /* Menos espacio en tablets */
+    margin-top: 70px; 
   }
-  
   .login-form {
     padding: 1.5rem;
-    max-width: 90%;                     /* Más ancho en tablets */
+    max-width: 90%; /* Más ancho en tablets */
   }
 }
 
@@ -126,12 +126,12 @@
 @media (max-width: 480px) {
   .login-container {
     padding: 1rem;
-    margin-top: 60px;                   /* Menos espacio en móviles */
+    margin-top: 60px; 
   }
   
   .login-form {
     padding: 1.5rem;
-    max-width: 95%;                     /* Casi todo el ancho en móviles */
+    max-width: 95%;
     width: 95%;
   }
   
@@ -142,10 +142,9 @@
   }
 }
 
-/* Móviles muy pequeños */
 @media (max-width: 320px) {
   .login-container {
-    margin-top: 50px;                   /* Aún menos espacio */
+    margin-top: 50px;  
     padding: 0.5rem;
   }
   

@@ -1,75 +1,113 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'  // Para redirigir tras el submit
+import React, { useState } from 'react'
+import axios from 'axios'
+import { Link, useNavigate } from 'react-router-dom'
 import BarraNavegacion from '../componentes/BarraNavegacion'
 import Footer from '../componentes/Footer'
-import '../assets/styles/forgot-password.css'         // Estilos específicos
+import '../assets/styles/forgot-password.css'
 
 export default function ForgotPassword() {
   const navigate = useNavigate()
+  const [step, setStep] = useState(1)
+  const [email, setEmail] = useState('')
+  const [code, setCode] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const [serverMessage, setServerMessage] = useState('')
+
+  const handleSendCode = async () => {
+    try {
+      const res = await axios.post('http://localhost:4000/api/auth/send-reset-code', { email })
+      setServerMessage(res.data.message)
+      setStep(2)
+    } catch (err) {
+      console.error('💥 Error al enviar código:', err)
+      alert(err.response?.data?.error || 'Error al enviar el código.')
+    }
+  }
+
+  const handleResetPassword = async (e) => {
     e.preventDefault()
-    // Logica o API para enviar el código de recuperación
-    // Por ahora a Login
-    navigate('/login')
+    if (newPassword !== confirmPassword) return alert('Las contraseñas no coinciden.')
+
+    try {
+      await axios.post('http://localhost:4000/api/auth/reset-password', {
+        email,
+        code,
+        newPassword
+      })
+      alert('Contraseña actualizada con éxito.')
+      navigate('/login')
+    } catch (err) {
+      alert(err.response?.data?.error || 'Error al cambiar la contraseña.')
+    }
   }
 
   return (
     <>
       <head>
         <title>Inkverso – Recuperar Contraseña</title>
-        <meta name="description" content="Recupera tu contraseña en Inkverso." />
       </head>
 
       <BarraNavegacion />
 
       <main className="forgot-container">
-        <form className="forgot-form" onSubmit={handleSubmit}>
+        <form className="forgot-form" onSubmit={step === 1 ? (e) => { e.preventDefault(); handleSendCode() } : handleResetPassword}>
           <h2>Recuperar Contraseña</h2>
 
-          <p className="forgot-form__info">
-            Te enviaremos un código de recuperación al correo que ingresaste. 
-            Por favor, ingresa el código recibido y tus nuevas credenciales.
-          </p>
+          {step === 1 && (
+            <>
+              <label htmlFor="email">Correo electrónico</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="tucorreo@ejemplo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit">Enviar código</button>
+            </>
+          )}
 
-          {/* Input para el código de recuperación */}
-          <label htmlFor="code">Código de recuperación</label>
-          <input
-            type="text"
-            id="code"
-            name="code"
-            placeholder="Ingresa el código"
-            required
-          />
+          {step === 2 && (
+            <>
+              <p>{serverMessage}</p>
 
-          {/* Input para la nueva contraseña */}
-          <label htmlFor="new-password">Nueva contraseña</label>
-          <input
-            type="password"
-            id="new-password"
-            name="new-password"
-            placeholder="••••••••"
-            required
-          />
+              <label htmlFor="code">Código</label>
+              <input
+                type="text"
+                id="code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+              />
 
-          {/* Input para repetir la contraseña */}
-          <label htmlFor="confirm-password">Repetir contraseña</label>
-          <input
-            type="password"
-            id="confirm-password"
-            name="confirm-password"
-            placeholder="••••••••"
-            required
-          />
+              <label htmlFor="new-password">Nueva contraseña</label>
+              <input
+                type="password"
+                id="new-password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
 
-          {/* Botón de recuperación */}
-          <button type="submit">Recuperar Contraseña</button>
+              <label htmlFor="confirm-password">Repetir contraseña</label>
+              <input
+                type="password"
+                id="confirm-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
 
-          {/* Link para reenviar el código */}
-          <div className="forgot-form__resend">
-            <span>¿No recibiste el código?</span>{' '}
-            <Link to="/forgot-password">Reenviar código</Link>
-          </div>
+              <button type="submit">Actualizar contraseña</button>
+              <div className="forgot-form__resend">
+                <span>¿No recibiste el código?</span>{' '}
+                <button type="button" onClick={handleSendCode}>Reenviar</button>
+              </div>
+            </>
+          )}
         </form>
       </main>
 

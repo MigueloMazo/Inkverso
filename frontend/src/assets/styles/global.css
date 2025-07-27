@@ -1,4 +1,4 @@
-/* Reset y configuración base */
+/*CONFIGURACIÓN BASE*/
 * {
   margin: 0;
   padding: 0;
@@ -27,11 +27,23 @@ body {
 
 main {
   flex: 1;
-  padding-top: 60px; /* Espacio para el nav fijo */
+  padding-top: 60px;
   padding-bottom: 20px;
 }
 
-/* NAVEGACIÓN */
+/*ANIMACIONES*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*BARRA DE NAVEGACIÓN*/
 .barra-nav {
   position: fixed;
   top: 0;
@@ -54,6 +66,7 @@ main {
   position: relative;
 }
 
+/* Logo */
 .barra-nav__logo {
   background-color: #FF7F00;
   color: white;
@@ -73,6 +86,7 @@ main {
   box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
 }
 
+/* Navegación Central */
 .barra-nav__grupo--centro {
   display: flex;
   gap: 2rem;
@@ -112,6 +126,61 @@ main {
   width: 80%;
 }
 
+/* Usuario */
+.barra-nav__usuario {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 127, 0, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 127, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.barra-nav__usuario:hover {
+  background-color: rgba(255, 127, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Botón Logout */
+.barra-nav__logout-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.barra-nav__logout-btn:hover {
+  color: #FF7F00;
+  background-color: rgba(255, 127, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.barra-nav__logout-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #FF7F00;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.barra-nav__logout-btn:hover::after {
+  width: 80%;
+}
+
+/* Icono Carrito */
 .barra-nav__icono--carrito {
   font-size: 1.8rem;
   color: white;
@@ -127,7 +196,7 @@ main {
   background-color: rgba(255, 127, 0, 0.2);
 }
 
-/* Botón hamburguesa */
+/* Botón Hamburguesa */
 .barra-nav__hamburguesa {
   display: none;
   flex-direction: column;
@@ -150,7 +219,7 @@ main {
   background-color: #FF7F00;
 }
 
-/* FOOTER */
+/*PIE DE PÁGINA*/
 .pie-pagina {
   background-color: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(10px);
@@ -183,6 +252,7 @@ main {
   text-align: right;
 }
 
+/* Redes Sociales */
 .pie-pagina__redes-sociales {
   display: flex;
   gap: 1rem;
@@ -242,11 +312,7 @@ main {
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
 }
 
-.copyright {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
+/* Carrito en Footer */
 .pie-pagina__carrito-enlace {
   font-size: 1.5rem;
   color: white;
@@ -262,7 +328,15 @@ main {
   background-color: rgba(255, 127, 0, 0.2);
 }
 
-/* RESPONSIVO */
+/* Copyright */
+.copyright {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/*Responsividad*/
+
+/* Tablets */
 @media (max-width: 768px) {
   main {
     padding-top: 55px;
@@ -308,10 +382,28 @@ main {
     border-bottom: none;
   }
 
-  .barra-nav__grupo--derecha {
-    display: none;
+  .barra-nav__grupo--centro--activo a {
+    animation: fadeIn 0.3s ease forwards;
   }
 
+  .barra-nav__grupo--centro--activo a:nth-child(1) { animation-delay: 0.1s; }
+  .barra-nav__grupo--centro--activo a:nth-child(2) { animation-delay: 0.2s; }
+  .barra-nav__grupo--centro--activo a:nth-child(3) { animation-delay: 0.3s; }
+  .barra-nav__grupo--centro--activo a:nth-child(4) { animation-delay: 0.4s; }
+
+  .barra-nav__grupo--derecha {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .barra-nav__usuario {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    margin-right: 0.5rem;
+  }
+
+  /* Footer Responsivo */
   .pie-pagina__contenido {
     flex-direction: column;
     gap: 1.5rem;
@@ -349,6 +441,7 @@ main {
   }
 }
 
+/* Móviles */
 @media (max-width: 480px) {
   .barra-nav__logo {
     font-size: 1.3rem;
@@ -373,24 +466,3 @@ main {
     height: 24px;
   }
 }
-
-/* Animaciones adicionales */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.barra-nav__grupo--centro--activo a {
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.barra-nav__grupo--centro--activo a:nth-child(1) { animation-delay: 0.1s; }
-.barra-nav__grupo--centro--activo a:nth-child(2) { animation-delay: 0.2s; }
-.barra-nav__grupo--centro--activo a:nth-child(3) { animation-delay: 0.3s; }
-.barra-nav__grupo--centro--activo a:nth-child(4) { animation-delay: 0.4s; }
