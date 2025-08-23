@@ -1,4 +1,3 @@
-/* ===== LAYOUT BASE Y ESTRUCTURA PRINCIPAL ===== */
 html, body {
     height: 100%;
     margin: 0;
@@ -30,7 +29,6 @@ html, body {
     padding-bottom: 5px; /* Espacio para footer */
 }
 
-/* ===== HEADER DEL CATÁLOGO ===== */
 .catalogo-header {
     text-align: center;
     padding: 1rem 1rem 0.5rem;
@@ -52,7 +50,7 @@ html, body {
     opacity: 0.9;
 }
 
-/* ===== SECCIÓN DE FILTROS ===== */
+/*  SECCIÓN DE FILTROS  */
 .catalogo-filtros {
     background: rgba(0, 0, 0, 0.85);
     padding: 1rem;
@@ -192,7 +190,7 @@ html, body {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* ===== LISTADO DE LIBROS ===== */
+/*  LISTADO DE LIBROS  */
 .catalogo-lista {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -240,7 +238,7 @@ html, body {
     box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
 }
 
-/* ===== TARJETAS DE LIBROS ===== */
+/*  TARJETAS DE LIBROS  */
 .book-card {
     display: flex;
     background: rgba(0, 0, 0, 0.8);
@@ -367,7 +365,7 @@ html, body {
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* ===== BOTONES Y ACCIONES ===== */
+/*  BOTONES Y ACCIONES  */
 .book-card__actions {
     display: flex;
     gap: 1rem;
@@ -418,7 +416,7 @@ html, body {
     opacity: 0.6;
 }
 
-/* ===== ESTADOS DE ACCESIBILIDAD ===== */
+/*  ESTADOS DE ACCESIBILIDAD  */
 .categoria-btn:focus,
 .btn-detalles:focus,
 .btn-carrito:focus,
@@ -428,7 +426,7 @@ html, body {
     outline-offset: 2px;
 }
 
-/* ===== ESTADOS DE CARGA ===== */
+/*  ESTADOS DE CARGA  */
 .loading {
     opacity: 0.6;
     pointer-events: none;
@@ -449,7 +447,7 @@ html, body {
     }
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/*  RESPONSIVE DESIGN  */
 
 /* Tablets */
 @media (max-width: 1024px) {

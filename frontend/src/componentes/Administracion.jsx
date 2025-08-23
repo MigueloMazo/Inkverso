@@ -1,106 +1,215 @@
-// src/pages/Admin.jsx
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import BarraNavegacion from '../componentes/BarraNavegacion'
 import Footer from '../componentes/Footer'
 import '../assets/styles/admin.css'
 
-// Datos de ejemplo
-const sampleUsers = [
-  { id: 1, name: 'Juan Pérez', email: 'juan.perez@example.com', isSeller: false },
-  { id: 2, name: 'Ana Gómez', email: 'ana.gomez@example.com', isSeller: true },
-  { id: 3, name: 'Carlos Ruiz', email: 'carlos.ruiz@example.com', isSeller: false },
-  { id: 4, name: 'María López', email: 'maria.lopez@example.com', isSeller: true },
-  { id: 5, name: 'Pedro Martínez', email: 'pedro.martinez@example.com', isSeller: false },
-]
-
-const sampleBooks = [
-  { 
-    id: 1, 
-    title: 'El Principito', 
-    author: 'Antoine de Saint-Exupéry', 
-    releaseDate: '1943-04-06', 
-    price: 25000, 
-    description: 'Un clásico de la literatura universal que narra la historia de un pequeño príncipe que viaja de planeta en planeta.', 
-    stock: 10, 
-    image: '/imagenes/BestSeller1.jpg' 
-  },
-  { 
-    id: 2, 
-    title: 'Cien Años de Soledad', 
-    author: 'Gabriel García Márquez', 
-    releaseDate: '1967-05-30', 
-    price: 40000, 
-    description: 'Obra maestra del realismo mágico que cuenta la historia de la familia Buendía.', 
-    stock: 5, 
-    image: '/imagenes/BestSeller1.jpg' 
-  },
-  { 
-    id: 3, 
-    title: 'Don Quijote de la Mancha', 
-    author: 'Miguel de Cervantes', 
-    releaseDate: '1605-01-16', 
-    price: 35000, 
-    description: 'La novela más importante de la literatura española y una de las primeras novelas modernas.', 
-    stock: 8, 
-    image: '/imagenes/BestSeller1.jpg' 
-  },
-]
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
 
 export default function Admin() {
-  const [tab, setTab] = useState('users')
-  const [users, setUsers] = useState(sampleUsers)
+  const [tab, setTab] = useState('users') // Estado para alternar entre pestañas: "users" o "books"
+  const [users, setUsers] = useState([])
   const [userSearch, setUserSearch] = useState('')
+  const [loadingUsers, setLoadingUsers] = useState(false)
 
-  const [books, setBooks] = useState(sampleBooks)
+  const [books, setBooks] = useState([])
   const [bookSearch, setBookSearch] = useState('')
-  const [showAdd, setShowAdd] = useState(false)
+  const [showAdd, setShowAdd] = useState(false) // toggle formulario de "agregar libro"
+  const [loadingBooks, setLoadingBooks] = useState(false)
   const [newBook, setNewBook] = useState({
-    title: '', author: '', releaseDate: '', price: '', description: '', stock: '', image: ''
+    title: '', 
+    author: '', 
+    published_date: '', 
+    price: '', 
+    description: '', 
+    stock: '', 
+    cover_url: ''
   })
   const [editingBookId, setEditingBookId] = useState(null)
   const [editBookData, setEditBookData] = useState({})
 
+  // EFECTOS 
+
+  useEffect(() => {
+    if (tab === 'users') {
+      fetchUsers()
+    } else if (tab === 'books') {
+      fetchBooks()
+    }
+  }, [tab])
+
+  //USUARIOS
+  const fetchUsers = async () => { // Obtener usuarios de la API
+    setLoadingUsers(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users`)
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      
+      const data = await response.json()
+      setUsers(data.users || [])
+    } catch (error) {
+      console.error('Error al cargar usuarios:', error)
+      alert('Error al cargar usuarios. Revisa la conexión.')
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
+  const updateUserStatus = async (userId, newStatus) => { // Cambiar estado (activo/inactivo) de un usuario
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users/${userId}/estado`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: newStatus })
+      })
+
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      
+      // Actualizar estado local
+      setUsers(prev => prev.map(u => 
+        u.id === userId ? { ...u, is_active: newStatus } : u
+      ))
+      
+      alert(`Usuario ${newStatus ? 'activado' : 'desactivado'} exitosamente`)
+    } catch (error) {
+      console.error('Error al actualizar usuario:', error)
+      alert('Error al actualizar el estado del usuario')
+    }
+  }
+
+  //LIBROS 
+
+  const fetchBooks = async () => {
+    setLoadingBooks(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/books`)
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      
+      const data = await response.json()
+      setBooks(data.books || [])
+    } catch (error) {
+      console.error('Error al cargar libros:', error)
+      alert('Error al cargar libros. Revisa la conexión.')
+    } finally {
+      setLoadingBooks(false)
+    }
+  }
+
+  const createBook = async (bookData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/books`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookData)
+      })
+
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      
+      const data = await response.json()
+      setBooks(prev => [...prev, data.book])
+      return true
+    } catch (error) {
+      console.error('Error al crear libro:', error)
+      alert('Error al crear el libro')
+      return false
+    }
+  }
+
+  // Editar un libro existente
+  const updateBook = async (bookId, bookData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/books/${bookId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookData)
+      })
+
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      
+      const data = await response.json()
+      setBooks(prev => prev.map(b => b.id === bookId ? data.book : b))
+      return true
+    } catch (error) {
+      console.error('Error al actualizar libro:', error)
+      alert('Error al actualizar el libro')
+      return false
+    }
+  }
+
+  // Eliminar libro de la BD
+  const deleteBookFromDB = async (bookId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/books/${bookId}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      
+      // Quitamos el libro del estado local
+      setBooks(prev => prev.filter(b => b.id !== bookId))
+      return true
+    } catch (error) {
+      console.error('Error al eliminar libro:', error)
+      alert('Error al eliminar el libro')
+      return false
+    }
+  }
+
+  //FILTROS
+
   // Filtrado de usuarios
   const filteredUsers = useMemo(
-    () => users.filter(u =>
-      u.name.toLowerCase().includes(userSearch.toLowerCase()) ||
-      u.email.toLowerCase().includes(userSearch.toLowerCase()) ||
-      (userSearch.toLowerCase() === 'vendedor' && u.isSeller) ||
-      (userSearch.toLowerCase() === 'usuario' && !u.isSeller)
-    ), [users, userSearch]
+    () => users.filter(u => {
+      const fullName = `${u.first_name || ''} ${u.last_name || ''}`.toLowerCase()
+      const email = (u.email || '').toLowerCase()
+      const searchLower = userSearch.toLowerCase()
+      
+      return fullName.includes(searchLower) || 
+             email.includes(searchLower) ||
+             (searchLower === 'activo' && u.is_active) ||
+             (searchLower === 'inactivo' && !u.is_active)
+    }), 
+    [users, userSearch]
   )
 
   // Filtrado de libros
   const filteredBooks = useMemo(
     () => books.filter(b =>
-      b.title.toLowerCase().includes(bookSearch.toLowerCase()) ||
-      b.author.toLowerCase().includes(bookSearch.toLowerCase())
-    ), [books, bookSearch]
+      (b.title || '').toLowerCase().includes(bookSearch.toLowerCase()) ||
+      (b.author || '').toLowerCase().includes(bookSearch.toLowerCase())
+    ), 
+    [books, bookSearch]
   )
 
-  // Alterna rol de vendedor
-  const toggleSeller = id => {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, isSeller: !u.isSeller } : u))
-  }
+  // MANEJADORES - USUARIOS
 
-  // Eliminar usuario
-  const deleteUser = id => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      setUsers(prev => prev.filter(u => u.id !== id))
+  // Alternar estado activo/inactivo del usuario
+  const toggleUserStatus = (userId) => {
+    const user = users.find(u => u.id === userId)
+    if (!user) return
+
+    const action = user.is_active ? 'desactivar' : 'activar'
+    if (window.confirm(`¿Estás seguro de que quieres ${action} este usuario?`)) {
+      updateUserStatus(userId, !user.is_active)
     }
   }
 
+  //MANEJADORES - LIBROS 
+
   // Eliminar libro
-  const deleteBook = id => {
+  const deleteBook = (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este libro?')) {
-      setBooks(prev => prev.filter(b => b.id !== id))
+      deleteBookFromDB(id)
     }
   }
 
   // Iniciar edición de libro
-  const handleEditBook = b => {
-    setEditingBookId(b.id)
-    setEditBookData({ ...b })
+  const handleEditBook = (book) => {
+    setEditingBookId(book.id)
+    setEditBookData({ 
+      ...book,
+      // Asegurar formato correcto de fecha
+      published_date: book.published_date ? book.published_date.split('T')[0] : ''
+    })
     setShowAdd(false)
   }
 
@@ -110,23 +219,27 @@ export default function Admin() {
   }
 
   // Guardar edición
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editBookData.title || !editBookData.author || !editBookData.price) {
       alert('Por favor completa los campos obligatorios: título, autor y precio')
       return
     }
     
-    setBooks(prev => prev.map(b => 
-      b.id === editingBookId 
-        ? { 
-            ...editBookData, 
-            price: Number(editBookData.price) || 0, 
-            stock: Number(editBookData.stock) || 0 
-          } 
-        : b
-    ))
-    setEditingBookId(null)
-    setEditBookData({})
+    const bookToUpdate = {
+      title: editBookData.title,
+      author: editBookData.author,
+      published_date: editBookData.published_date || null,
+      price: Number(editBookData.price) || 0,
+      stock: Number(editBookData.stock) || 0,
+      description: editBookData.description || '',
+      cover_url: editBookData.cover_url || ''
+    }
+
+    const success = await updateBook(editingBookId, bookToUpdate)
+    if (success) {
+      setEditingBookId(null)
+      setEditBookData({})
+    }
   }
 
   // Cancelar edición
@@ -136,49 +249,59 @@ export default function Admin() {
   }
 
   // Capturar imagen de nuevo libro
-  const handleNewBookImage = e => {
+  const handleNewBookImage = (e) => {
     const file = e.target.files[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = () => {
-        setNewBook(prev => ({ ...prev, image: reader.result }))
+        setNewBook(prev => ({ ...prev, cover_url: reader.result }))
       }
       reader.readAsDataURL(file)
     }
   }
 
   // Capturar imagen en edición
-  const handleEditBookImage = e => {
+  const handleEditBookImage = (e) => {
     const file = e.target.files[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = () => {
-        handleEditBookChange('image', reader.result)
+        handleEditBookChange('cover_url', reader.result)
       }
       reader.readAsDataURL(file)
     }
   }
 
   // Agregar nuevo libro
-  const handleAddBook = () => {
+  const handleAddBook = async () => {
     if (!newBook.title || !newBook.author || !newBook.price) {
       alert('Por favor completa los campos obligatorios: título, autor y precio')
       return
     }
 
-    const id = Math.max(...books.map(b => b.id), 0) + 1
-    setBooks(prev => [
-      ...prev,
-      { 
-        id, 
-        ...newBook, 
-        price: Number(newBook.price) || 0, 
-        stock: Number(newBook.stock) || 0,
-        image: newBook.image || '/imagenes/default-book.jpg'
-      }
-    ])
-    setNewBook({ title: '', author: '', releaseDate: '', price: '', description: '', stock: '', image: '' })
-    setShowAdd(false)
+    const bookToCreate = {
+      title: newBook.title,
+      author: newBook.author,
+      published_date: newBook.published_date || null,
+      price: Number(newBook.price) || 0,
+      stock: Number(newBook.stock) || 0,
+      description: newBook.description || '',
+      cover_url: newBook.cover_url || ''
+    }
+
+    const success = await createBook(bookToCreate)
+    if (success) {
+      setNewBook({ 
+        title: '', 
+        author: '', 
+        published_date: '', 
+        price: '', 
+        description: '', 
+        stock: '', 
+        cover_url: '' 
+      })
+      setShowAdd(false)
+    }
   }
 
   // Función para mostrar formulario de agregar
@@ -187,6 +310,7 @@ export default function Admin() {
     setEditingBookId(null)
     setEditBookData({})
   }
+
 
   return (
     <>
@@ -213,12 +337,16 @@ export default function Admin() {
               <h2>Gestión de Usuarios</h2>
               <input
                 className="search-input"
-                placeholder="Buscar por nombre, correo o tipo (vendedor/usuario)"
+                placeholder="Buscar por nombre, correo o estado (activo/inactivo)"
                 value={userSearch}
                 onChange={e => setUserSearch(e.target.value)}
               />
               
-              {filteredUsers.length === 0 ? (
+              {loadingUsers ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
+                  Cargando usuarios...
+                </div>
+              ) : filteredUsers.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
                   No se encontraron usuarios que coincidan con la búsqueda
                 </div>
@@ -229,37 +357,36 @@ export default function Admin() {
                       <tr>
                         <th>Nombre</th>
                         <th>Correo Electrónico</th>
-                        <th>Tipo de Usuario</th>
+                        <th>Estado</th>
+                        <th>Fecha de Registro</th>
                         <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredUsers.map(u => (
                         <tr key={u.id}>
-                          <td data-label="Nombre">{u.name}</td>
-                          <td data-label="Correo">{u.email}</td>
-                          <td data-label="Tipo">
+                          <td data-label="Nombre">
+                            {`${u.first_name || ''} ${u.last_name || ''}`.trim() || 'Sin nombre'}
+                          </td>
+                          <td data-label="Correo">{u.email || 'Sin email'}</td>
+                          <td data-label="Estado">
                             <span style={{ 
-                              color: u.isSeller ? '#28a745' : '#17a2b8',
+                              color: u.is_active ? '#28a745' : '#dc3545',
                               fontWeight: '600'
                             }}>
-                              {u.isSeller ? 'Vendedor' : 'Usuario'}
+                              {u.is_active ? 'Activo' : 'Inactivo'}
                             </span>
+                          </td>
+                          <td data-label="Fecha de Registro">
+                            {u.created_at ? new Date(u.created_at).toLocaleDateString('es-ES') : 'No disponible'}
                           </td>
                           <td data-label="Acciones">
                             <button 
                               className="toggle-button" 
-                              onClick={() => toggleSeller(u.id)}
-                              title={u.isSeller ? 'Cambiar a Usuario' : 'Cambiar a Vendedor'}
+                              onClick={() => toggleUserStatus(u.id)}
+                              title={u.is_active ? 'Desactivar Usuario' : 'Activar Usuario'}
                             >
-                              {u.isSeller ? 'Hacer Usuario' : 'Hacer Vendedor'}
-                            </button>
-                            <button 
-                              className="delete-button" 
-                              onClick={() => deleteUser(u.id)}
-                              title="Eliminar Usuario"
-                            >
-                              Eliminar
+                              {u.is_active ? 'Desactivar' : 'Activar'}
                             </button>
                           </td>
                         </tr>
@@ -315,8 +442,8 @@ export default function Admin() {
                   <input
                     type="date"
                     placeholder="Fecha de publicación"
-                    value={editBookData.releaseDate || ''}
-                    onChange={e => handleEditBookChange('releaseDate', e.target.value)}
+                    value={editBookData.published_date || ''}
+                    onChange={e => handleEditBookChange('published_date', e.target.value)}
                   />
                   <input
                     type="number"
@@ -344,10 +471,10 @@ export default function Admin() {
                     onChange={e => handleEditBookChange('description', e.target.value)}
                   />
                   
-                  {editBookData.image && (
+                  {editBookData.cover_url && (
                     <div style={{ gridColumn: '1 / -1', textAlign: 'center' }}>
                       <img 
-                        src={editBookData.image} 
+                        src={editBookData.cover_url} 
                         className="table-image-preview" 
                         alt="Vista previa" 
                       />
@@ -390,8 +517,8 @@ export default function Admin() {
                   <input
                     type="date"
                     placeholder="Fecha de publicación"
-                    value={newBook.releaseDate}
-                    onChange={e => setNewBook(prev => ({ ...prev, releaseDate: e.target.value }))}
+                    value={newBook.published_date}
+                    onChange={e => setNewBook(prev => ({ ...prev, published_date: e.target.value }))}
                   />
                   <input
                     type="number"
@@ -419,10 +546,10 @@ export default function Admin() {
                     onChange={e => setNewBook(prev => ({ ...prev, description: e.target.value }))}
                   />
                   
-                  {newBook.image && (
+                  {newBook.cover_url && (
                     <div style={{ gridColumn: '1 / -1', textAlign: 'center' }}>
                       <img 
-                        src={newBook.image} 
+                        src={newBook.cover_url} 
                         className="table-image-preview" 
                         alt="Vista previa" 
                       />
@@ -441,7 +568,11 @@ export default function Admin() {
               )}
 
               {/* Tabla de libros */}
-              {filteredBooks.length === 0 ? (
+              {loadingBooks ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
+                  Cargando libros...
+                </div>
+              ) : filteredBooks.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
                   {bookSearch ? 'No se encontraron libros que coincidan con la búsqueda' : 'No hay libros registrados'}
                 </div>
@@ -456,6 +587,7 @@ export default function Admin() {
                         <th>Fecha</th>
                         <th>Precio</th>
                         <th>Stock</th>
+                        <th>Rating</th>
                         <th>Descripción</th>
                         <th>Acciones</th>
                       </tr>
@@ -467,7 +599,7 @@ export default function Admin() {
                           <tr key={b.id}>
                             <td data-label="Imagen">
                               <img 
-                                src={b.image || '/imagenes/default-book.jpg'} 
+                                src={b.cover_url || '/imagenes/default-book.jpg'} 
                                 className="table-image" 
                                 alt={b.title}
                                 onError={(e) => {
@@ -480,7 +612,7 @@ export default function Admin() {
                             </td>
                             <td data-label="Autor">{b.author}</td>
                             <td data-label="Fecha">
-                              {b.releaseDate ? new Date(b.releaseDate).toLocaleDateString('es-ES') : 'No especificada'}
+                              {b.published_date ? new Date(b.published_date).toLocaleDateString('es-ES') : 'No especificada'}
                             </td>
                             <td data-label="Precio">
                               <span style={{ color: '#28a745', fontWeight: '600' }}>
@@ -493,6 +625,11 @@ export default function Admin() {
                                 fontWeight: '600'
                               }}>
                                 {b.stock || 0} unidades
+                              </span>
+                            </td>
+                            <td data-label="Rating">
+                              <span style={{ color: '#ffa500', fontWeight: '600' }}>
+                                {b.rating ? `⭐ ${b.rating}` : 'Sin rating'}
                               </span>
                             </td>
                             <td data-label="Descripción">

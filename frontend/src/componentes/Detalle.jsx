@@ -1,142 +1,79 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import BarraNavegacion from '../componentes/BarraNavegacion'
 import Footer from '../componentes/Footer'
-import '../assets/styles/detalles.css'  // Estilos específicos para la vista de detalle
-
-const books = [
-    {
-        id: 1,
-        category: 'Ficción',
-        title: 'El Gran Gatsby',
-        author: 'F. Scott Fitzgerald',
-        description: 'Una novela clásica de F. Scott Fitzgerald sobre ambición y amor en los años 20.',
-        price: 45000,
-        rating: 4.5,
-        releaseDate: '1925-04-10',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 15
-    },
-    {
-        id: 2,
-        category: 'Ciencia',
-        title: 'Breves respuestas a las grandes preguntas',
-        author: 'Stephen Hawking',
-        description: 'Reflexiones finales sobre el universo y la vida del reconocido físico.',
-        price: 60000,
-        rating: 4.8,
-        releaseDate: '2018-10-16',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 8
-    },
-    {
-        id: 3,
-        category: 'Misterio',
-        title: '1984',
-        author: 'George Orwell',
-        description: 'La distopía de George Orwell que imagina un mundo de vigilancia y control total.',
-        price: 50000,
-        rating: 4.2,
-        releaseDate: '1949-06-08',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 12
-    },
-    {
-        id: 4,
-        category: 'Misterio',
-        title: 'El Nombre de la Rosa',
-        author: 'Umberto Eco',
-        description: 'Un misterio medieval lleno de simbolismo y filosofía en una abadía italiana.',
-        price: 55000,
-        rating: 4.6,
-        releaseDate: '1980-09-01',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 6
-    },
-    {
-        id: 5,
-        category: 'Romance',
-        title: 'Orgullo y Prejuicio',
-        author: 'Jane Austen',
-        description: 'La historia de amor entre Elizabeth Bennet y Mr. Darcy en la Inglaterra del siglo XIX.',
-        price: 42000,
-        rating: 4.7,
-        releaseDate: '1813-01-28',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 20
-    },
-    {
-        id: 6,
-        category: 'No Ficción',
-        title: 'Sapiens',
-        author: 'Yuval Noah Harari',
-        description: 'Una fascinante exploración de la historia de la humanidad desde sus orígenes.',
-        price: 65000,
-        rating: 4.9,
-        releaseDate: '2011-02-10',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 18
-    },
-    {
-        id: 7,
-        category: 'Ficción',
-        title: 'Cien Años de Soledad',
-        author: 'Gabriel García Márquez',
-        description: 'La obra maestra del realismo mágico que narra la historia de los Buendía.',
-        price: 48000,
-        rating: 4.8,
-        releaseDate: '1967-05-30',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 14
-    },
-    {
-        id: 8,
-        category: 'Ciencia',
-        title: 'Cosmos',
-        author: 'Carl Sagan',
-        description: 'Un viaje fascinante por el universo de la mano del famoso astrónomo.',
-        price: 52000,
-        rating: 4.5,
-        releaseDate: '1980-09-28',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 11
-    },
-    {
-        id: 9,
-        category: 'Romance',
-        title: 'Jane Eyre',
-        author: 'Charlotte Brontë',
-        description: 'La conmovedora historia de una joven huérfana que encuentra el amor y la independencia.',
-        price: 44000,
-        rating: 4.4,
-        releaseDate: '1847-10-16',
-        image: '/imagenes/BestSeller1.jpg',
-        stock: 9
-    }
-]
+import '../assets/styles/detalles.css'
 
 export default function DetalleLibro() {
-  const { id } = useParams()                     // Captura el ID desde la URL
-  const book = books.find(b => b.id === parseInt(id))
+  const { id } = useParams()
+  const [book, setBook] = useState(null) // Guarda la info del libro
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Estados para comentarios
-  const [comments, setComments] = useState([
-    { user: 'Ana', text: 'Me encantó esta lectura.', rating: 5 },
-    { user: 'Carlos', text: 'Interesante pero denso.', rating: 4 },
-  ])
+  const [comments, setComments] = useState([]) // Lista de comentarios del libro
+  const [userName, setUserName] = useState('') //Nombre del usuario que comenta
   const [newComment, setNewComment] = useState('')
-  const [newRating, setNewRating] = useState(0)
+  const [newRating, setNewRating] = useState(0) //Calificación que da el usuario (1-5)
 
-  // Maneja el envío de un nuevo comentario
-  const handleCommentSubmit = (e) => {
+  useEffect(() => { // Efecto que se ejecuta cuando cambia el `id` (cuando se abre otro libro)
+    const fetchBook = async () => { //Obtener datos del libro desde el backend
+      try {
+        const res = await fetch(`http://localhost:4000/api/catalogo/${id}`)
+        if (!res.ok) throw new Error('Libro no encontrado')
+        const data = await res.json()
+        setBook(data) // Guardar el libro en el estado
+
+        const commentsRes = await fetch(`http://localhost:4000/api/catalogo/${id}/comments`) //Obtener los comentarios del libro
+        const commentsData = await commentsRes.json()
+        setComments(commentsData)
+      } catch (err) {
+        console.error('❌ Error cargando libro:', err.message)
+        setError(err.message)
+      } finally {
+        setLoading(false) // Al final siempre se deja de cargar
+      }
+    }
+
+    fetchBook()
+  }, [id])
+
+  const handleCommentSubmit = async (e) => { // Maneja el envío de un nuevo comentario
     e.preventDefault()
-    if (!newComment || newRating === 0) return
-    setComments([...comments, { user: 'Tú', text: newComment, rating: newRating }])
-    setNewComment('')
-    setNewRating(0)
+    if (!userName || newRating === 0) return
+
+    const res = await fetch(`http://localhost:4000/api/catalogo/${id}/comments`, { //Enviar comentario al backend
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_name: userName,
+        rating: newRating,
+        text: newComment
+      })
+    })
+
+    if (res.ok) { //Si se guardó bien, actualizar lista de comentarios
+      const updated = await fetch(`http://localhost:4000/api/catalogo/${id}/comments`)
+      const data = await updated.json()
+      setComments(data)
+      setUserName('')
+      setNewRating(0)
+      setNewComment('')
+    }
   }
 
-  if (!book) {
+  if (loading) {
+    return (
+      <>
+        <BarraNavegacion />
+        <main className="detalle-container">
+          <p>Cargando detalles del libro...</p>
+        </main>
+        <Footer />
+      </>
+    )
+  }
+
+  if (error || !book) {
     return (
       <>
         <BarraNavegacion />
@@ -153,47 +90,62 @@ export default function DetalleLibro() {
       <BarraNavegacion />
 
       <main className="detalle-container">
-        {/* Imagen a la izquierda (desktop) o centrada (móvil) */}
         <div className="detalle-image">
-          <img src={book.image} alt={book.title} />
+          <img src={book.cover_url} alt={`Portada de ${book.title}`} />
         </div>
 
-        {/* Información del libro */}
         <div className="detalle-info">
           <h2 className="detalle-title">{book.title}</h2>
           <ul className="detalle-list">
             <li><strong>Autor:</strong> {book.author}</li>
-            <li><strong>Año de publicación:</strong> {new Date(book.releaseDate).getFullYear()}</li>
+            <li><strong>Año de publicación:</strong> {new Date(book.published_date).getFullYear()}</li>
             <li><strong>Descripción:</strong> {book.description}</li>
-            <li><strong>Puntuación:</strong> {book.rating} ⭐</li>
+            <li><strong>Precio:</strong> ${book.price.toLocaleString()}</li>
+            <li><strong>Stock disponible:</strong> {book.stock}</li>
           </ul>
-          <button className="btn-carrito">🛒 Añadir al carrito</button>
 
-          {/* Sección de comentarios */}
+          <button 
+            className="btn-carrito"
+            disabled={book.stock === 0}
+          >
+            {book.stock > 0 ? '🛒 Añadir al carrito' : 'Agotado'}
+          </button>
+
           <section className="detalle-comments">
             <h3>Comentarios</h3>
-            <ul className="comments-list">
-              {comments.map((c, i) => (
-                <li key={i} className="comment-item">
-                  <span className="comment-user">{c.user}:</span>
-                  <span className="comment-text"> {c.text}</span>
-                  <span className="comment-rating"> ({c.rating} ⭐)</span>
-                </li>
-              ))}
-            </ul>
 
-            {/* Formulario para nuevo comentario */}
+            {comments.length === 0 ? (
+              <p>Este libro aún no tiene comentarios.</p>
+            ) : (
+              <ul className="comments-list">
+                {comments.map((c, i) => (
+                  <li key={i} className="comment-item">
+                    <span className="comment-user">{c.user_name}:</span>
+                    <span className="comment-text"> {c.text || 'Sin observación'}</span>
+                    <span className="comment-rating"> ({c.rating} ⭐)</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
             <form onSubmit={handleCommentSubmit} className="comment-form">
+              <input
+                type="text"
+                placeholder="Tu nombre"
+                value={userName}
+                onChange={e => setUserName(e.target.value)}
+                required
+              />
+
               <textarea
                 value={newComment}
                 onChange={e => setNewComment(e.target.value)}
-                placeholder="Escribe tu comentario"
-                required
+                placeholder="Tu comentario (opcional)"
               />
-              <label htmlFor="rating-select">
-                Tu puntuación:
+
+              <label>
+                Calificación:
                 <select
-                  id="rating-select"
                   value={newRating}
                   onChange={e => setNewRating(parseInt(e.target.value))}
                   required
@@ -204,6 +156,7 @@ export default function DetalleLibro() {
                   ))}
                 </select>
               </label>
+
               <button type="submit" className="btn-submit-comment">
                 Enviar comentario
               </button>
