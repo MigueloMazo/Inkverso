@@ -11,6 +11,9 @@ const express = require('express');
 const cors    = require('cors'); // Permite peticiones desde otros orígenes como el frontend
 const morgan  = require('morgan'); // Middleware para logs de las peticiones HTTP
 const authRouter = require('./routes/auth'); // Importa las rutas de autenticación
+const catalogoRouter = require('./routes/catalogo'); // Importa las rutas del catálogo
+const adminRoutes = require('./routes/adminBooks') // Importa las rutas de administración de libros
+const cartRoutes = require('./routes/cart');
 
 // Crea una instancia de la app de Express
 const app = express();
@@ -20,6 +23,9 @@ app.use(express.json());
 app.use(morgan('dev'));
 // Monta el router de autenticación en la ruta base /api/auth
 app.use('/api/auth', authRouter);  
+app.use('/api/catalogo', catalogoRouter); // Monta el router del catálogo en la ruta base /api/catalog
+app.use('/api/admin', adminRoutes); // Monta las rutas de administración de libros
+app.use('/api/cart', cartRoutes);
 
 // Ejemplo de ruta de prueba
 app.get('/health', (req, res) => {

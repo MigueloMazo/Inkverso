@@ -1,7 +1,7 @@
-// Importe librerías 
-const express  = require('express'); // Framework web para manejar rutas y solicitudes
-const bcrypt   = require('bcrypt'); 
-const jwt      = require('jsonwebtoken');
+// Importe librerías
+const express = require('express'); // Framework web para manejar rutas y solicitudes
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const supabase = require('../config/db'); // Conexión a la base de datos de Supabase
 
 //router de Express para manejar las rutas de autenticación
@@ -42,13 +42,12 @@ router.post('/register', async (req, res) => {
 
     //Generar el JWT con id y email
     const payload = { sub: user.id, email: user.email };
-    const token   = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: '8h'
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: '8h',
     });
 
     //Devolver usuario y token
     res.status(201).json({ user, token });
-
   } catch (err) {
     console.error('🔥 Register error ▶', err);
     res.status(500).json({ error: 'Error interno del servidor.' });
@@ -66,9 +65,7 @@ router.post('/login', async (req, res) => {
 
     // Validación básica
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ error: 'Email y password son requeridos.' });
+      return res.status(400).json({ error: 'Email y password son requeridos.' });
     }
 
     //Buscar el usuario por email
@@ -81,7 +78,8 @@ router.post('/login', async (req, res) => {
     if (fetchError) {
       return res.status(500).json({ error: fetchError.message });
     }
-    if (!users.length) { // Si no se encuentra ningún usuario con ese email
+    if (!users.length) {
+      // Si no se encuentra ningún usuario con ese email
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
@@ -98,67 +96,72 @@ router.post('/login', async (req, res) => {
 
     //Generar el JWT
     const payload = { sub: user.id, email: user.email };
-    const token   = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: '8h'
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: '8h',
     });
 
     //Devolver usuario y token
     res.json({ user, token });
-
   } catch (err) {
     console.error('🔥 Login error ▶', err);
     res.status(500).json({ error: 'Error interno del servidor.' });
   }
 });
 
-// Simular almacenamiento temporal del código (en memoria)
-const codes = {}
+// Simular almacenamiento temporal del código (en memoria) para restablecimiento de password
+const codes = {};
 
 // Ruta para enviar código de recuperación
 router.post('/send-reset-code', async (req, res) => {
-  const { email } = req.body
+  const { email } = req.body;
 
   const { data: user, error } = await supabase
     .from('users')
     .select('id')
     .eq('email', email)
-    .single()
+    .single();
 
   if (error || !user) {
-    return res.status(400).json({ error: 'Usuario no encontrado.' })
+    return res.status(400).json({ error: 'Usuario no encontrado.' });
   }
 
-  const code = Math.floor(100000 + Math.random() * 900000).toString()
-  codes[email] = code
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  codes[email] = code;
 
-  console.log(`📨 Código de recuperación para ${email}: ${code}`)
+  console.log(`📨 Código de recuperación para ${email}: ${code}`);
 
-  return res.json({ message: 'Código enviado al correo. (simulado en consola)' })
-})
+  // Devolver el código en la respuesta para la simulación
+  return res.json({
+    message: 'Utiliza el siguiente código para restablecer tu contraseña.',
+    code: code,
+  });
+});
 
 // Ruta para cambiar la contraseña
 router.post('/reset-password', async (req, res) => {
-  const { email, code, newPassword } = req.body
+  const { email, code, newPassword } = req.body;
 
   if (codes[email] !== code) {
-    return res.status(400).json({ error: 'Código incorrecto.' })
+    return res.status(400).json({ error: 'Código incorrecto.' });
   }
 
-  const password_hash = await bcrypt.hash(newPassword, 10)
+  const password_hash = await bcrypt.hash(newPassword, 10);
 
   const { error } = await supabase
     .from('users')
     .update({ password_hash })
-    .eq('email', email)
+    .eq('email', email);
 
   if (error) {
-    return res.status(500).json({ error: 'No se pudo actualizar la contraseña.' })
+    return res
+      .status(500)
+      .json({ error: 'No se pudo actualizar la contraseña.' });
   }
 
   // Limpieza del código
-  delete codes[email]
+  delete codes[email];
 
-  return res.json({ message: 'Contraseña actualizada con éxito.' })
-})
+  return res.json({ message: 'Contraseña actualizada con éxito.' });
+});
 
 module.exports = router; //Exportamos el router para usarlo en server.js
